@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-u8mx#$353x)*d!49v^d!4v$&^p01t^i8^=($d^07xeq&##l8+p
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ussen.pythonanywhere.com']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,5 +82,6 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'www/static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
