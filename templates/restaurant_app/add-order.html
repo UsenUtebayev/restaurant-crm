@@ -1,0 +1,10 @@
+{% extends 'restaurant_app/forms.html' %}
+{% block form %}
+    {% load static %}
+    <h3>Тапсырыс беру</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-outline-success mt-2" type="submit">Даяшыға жіберу</button>
+    </form>
+{% endblock %}

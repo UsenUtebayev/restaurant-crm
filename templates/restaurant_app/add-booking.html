@@ -1,0 +1,10 @@
+{% extends 'restaurant_app/forms.html' %}
+{% block form %}
+    {% load static %}
+    <h3>Бронь жасау</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+        <button class="btn btn-outline-success mt-2" type="submit">Жүктеу</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'restaurant_app/base.html' %}
+{% block content %}
+    <div class="container-fluid ">
+        <div class="list-group d-flex px-5 py-5">
+            {% for booking in bookings %}
+                <div class="list-group-item list-group-item-action flex-row flex-wrap align-items-start m-3">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Бронь номері: {{ booking.pk }}</h5>
+                        <small>Датасы: {{ booking.created_at | date }}</small>
+                    </div>
+                    <p class="mb-1">Клиент: {{ booking.client }}</p>
+                    <small>{{ booking.taking_place }}</small>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock %}
