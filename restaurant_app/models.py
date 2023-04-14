@@ -1,3 +1,5 @@
+import math
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import ForeignKey
@@ -36,7 +38,7 @@ class Food(models.Model):
     cook_time = models.IntegerField()
 
     def __str__(self):
-        return f"{self.title}, бағасы: {str(self.price)} тг, әзірлеу уақыты: {str(self.cook_time / 60)} мин"
+        return f"{self.title}, бағасы: {str(self.price)} тг, әзірлеу уақыты: {str(math.floor(self.cook_time / 60))} мин"
 
 
 class Order(models.Model):
