@@ -1,7 +1,8 @@
 {% extends 'restaurant_app/base.html' %}
 {% block content %}
-    <div class="container-fluid ">
-        <div class="list-group d-flex px-5 py-5">
+<div class="container-fluid ">
+    <div class="list-group d-flex px-5 py-5">
+        {% if bookings %}
             {% for booking in bookings %}
                 <div class="list-group-item list-group-item-action flex-row flex-wrap align-items-start m-3">
                     <div class="d-flex w-100 justify-content-between">
@@ -12,6 +13,13 @@
                     <small>{{ booking.taking_place }}</small>
                 </div>
             {% endfor %}
+        {% endif %}
+        <div class="container m-5 d-flex align-items-center flex-column">
+            <h3>Бронь беру сервисіне қош келдіңіз!</h3>
+            <p>Сіздің бронь еткен орыңдарыңыз жоқ!</p>
+
+            <a class="mt-2" href="{% url 'add-booking' %}">Бірінше бронь жасығыңыз келедіме?</a>
+            {% endif %}
         </div>
 
     </div>
