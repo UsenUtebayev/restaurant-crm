@@ -97,8 +97,6 @@ def add_order(request):
 
 def delete_order(request, pk):
     instance = get_object_or_404(Order, pk=pk)
-    if instance.client_id != request.user.pk:
-        raise PermissionDenied('Вы не можете удалять чужие таски')
     instance.delete()
     return redirect('index')
 
