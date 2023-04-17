@@ -16,7 +16,10 @@
             <li class="nav-item mx-1">
                 <a class="nav-link" href="{% url 'landing' %}">Сайт парақшасы</a>
             </li>
-            {% if role.id == 1 or role.id == 3%}
+            <li class="nav-item mx-1">
+                <a class="nav-link" href="{% url 'get-menu' %}">Әс мәзірі</a>
+            </li>
+            {% if role.id == 1 or role.id == 3 %}
                 <li class="nav-item mx-1">
                     <a class="nav-link text-success font-weight-bold" href="{% url 'get-bookings' %}">Бронь</a>
                 </li>
