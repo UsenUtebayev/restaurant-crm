@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 
 from restaurant_app.forms import UserRegistrationForm, UserLoginForm, ChangePasswordForm, MakeOrder, BookingForm
-from restaurant_app.models import Order, Client, Place, Booking
+from restaurant_app.models import Order, Client, Place, Booking, Food, Drink
 
 
 def index(request):
@@ -130,3 +130,10 @@ def get_bookings(request):
     else:
         bookings = Booking.objects.filter(client=request.user.pk)
         return render(request, 'restaurant_app/booking-list.html', context={"bookings": bookings})
+
+
+def get_menu(request):
+    foods = Food.objects.all()
+    drinks = Drink.objects.all()
+    context = {'foods': foods, 'drinks': drinks}
+    return render(request, 'restaurant_app/get-menu.html', context=context)

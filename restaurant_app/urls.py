@@ -1,7 +1,7 @@
 from django.urls import path
 
 from restaurant_app.views import change_password, index, register, login_user, logout_user, add_order, delete_order, \
-    add_booking, get_bookings
+    add_booking, get_bookings, get_menu
 
 urlpatterns = [
     path('', index, name='index'),
@@ -13,4 +13,5 @@ urlpatterns = [
     path('delete-order/<int:pk>', delete_order, name='delete-order'),
     path('add-booking', add_booking, name='add-booking'),
     path('get-bookings', get_bookings, name='get-bookings'),
+    path('get-menu', get_menu, name='get-menu'),
 ]
