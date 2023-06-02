@@ -6,7 +6,7 @@ SECRET_KEY = 'django-insecure-u8mx#$353x)*d!49v^d!4v$&^p01t^i8^=($d^07xeq&##l8+p
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['ussen.pythonanywhere.com']
+ALLOWED_HOSTS = ['ussen.pythonanywhere.com', '127.0.0.1']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -16,7 +16,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'restaurant_app.apps.RestaurantAppConfig',
-    'landing'
 ]
 
 MIDDLEWARE = [
@@ -43,7 +42,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'restaurant_app.context-processors.get_role',
             ],
         },
     },

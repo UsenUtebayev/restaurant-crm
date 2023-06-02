@@ -1,10 +1,11 @@
 from django.contrib.auth import password_validation
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordChangeForm
 from django import forms
-from django.forms import Select, Textarea
+from django.contrib.auth.models import User
+from django.forms import Select, Textarea, NumberInput, TextInput
 from django.forms.utils import ErrorList
 
-from restaurant_app.models import Client, Order, Booking, Place
+from restaurant_app.models import Order, Instance, CornType, Equipment
 
 
 class CustomErrorList(ErrorList):
@@ -24,23 +25,14 @@ class UserRegistrationForm(UserCreationForm):
         "password_mismatch": "Пароли не совпадают"
     }
     attrs = {"class": "form-control h6"}
-    username = forms.CharField(label='Есіміңіз', widget=forms.TextInput(attrs=attrs))
-    password1 = forms.CharField(label='Құпия сөз', widget=forms.PasswordInput(attrs=attrs))
-    password2 = forms.CharField(label='Құпия сөзің тексеріңіз', widget=forms.PasswordInput(attrs=attrs))
-    email = forms.EmailField(label='Сіздің поштаңыз', widget=forms.EmailInput(attrs=attrs))
+    username = forms.CharField(label='Ваше имя', widget=forms.TextInput(attrs=attrs))
+    password1 = forms.CharField(label='Ваш пароль', widget=forms.PasswordInput(attrs=attrs))
+    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput(attrs=attrs))
+    email = forms.EmailField(label='Ваша почта', widget=forms.EmailInput(attrs=attrs))
 
     class Meta:
-        model = Client
-        fields = ('username', 'role', 'email', 'password1', 'password2')
-        labels = {
-            "role": "Сіздің рөліңіз"
-        }
-        widgets = {
-            "role": Select(attrs={"class": "form-control"})
-        }
-        help_texts = {
-            'role': None
-        }
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
 
 
 class UserLoginForm(AuthenticationForm):
@@ -48,15 +40,15 @@ class UserLoginForm(AuthenticationForm):
         super().__init__(*args, **kwargs)
         self.error_class = CustomErrorList
 
-    username_label = "Есіміңіз"
-    passwors_label = "Құпия сөз"
+    username_label = "Ваше имя"
+    passwors_label = "Ваш пароль"
     username_attrs = {"class": "form-control", "placeholder": username_label}
     password_attrs = {"class": "form-control mt-3", "placeholder": passwors_label}
     username = forms.CharField(label='', widget=forms.TextInput(attrs=username_attrs))
     password = forms.CharField(label='', widget=forms.PasswordInput(attrs=password_attrs))
     error_messages = {
         "invalid_login": (
-            "Қате тердіңіз."
+            "Проверьте правильность ."
         ),
         "inactive": "Аккаунт был забанен",
     }
@@ -91,39 +83,60 @@ class ChangePasswordForm(PasswordChangeForm):
 class MakeOrder(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ['food', 'drink', 'description', 'waiter', 'cook']
+        fields = ['humidity', 'temperature', 'equipment', 'instance', 'description']
         labels = {
-            "food": "Тағам",
-            "drink": "Сусын",
-            "description": "Даяшы мен аспазшыға ескертуіңіз",
-            "waiter": "Сіздің қызметтегі даяшыңыз",
-            "cook": "Егер қаласаңыз аспазшыны сайлауға болады",
+            "humidity": "Выберите влажность",
+            "temperature": "Выберите температуру",
+            'equipment': "Выберите модель аппаратуры",
+            'instance': "Выберите партию",
+            "description": "Комментарий к процессу",
         }
         widgets = {
-            "food": Select(attrs={"class": "form-control"}),
-            "drink": Select(attrs={"class": "form-control"}),
+            "humidity": Select(attrs={"class": "form-control"}),
+            "temperature": Select(attrs={"class": "form-control"}),
+            "equipment": Select(attrs={"class": "form-control"}),
+            "instance": Select(attrs={"class": "form-control"}),
             "description": Textarea(attrs={"class": "form-control"}),
-            "waiter": Select(attrs={"class": "form-control"}),
-            "cook": Select(attrs={"class": "form-control"}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(MakeOrder, self).__init__(*args, *kwargs)
-        self.fields['waiter'].queryset = Client.objects.filter(role_id=1)
-        self.fields['cook'].queryset = Client.objects.filter(role_id=2)
 
-
-class BookingForm(forms.ModelForm):
+class AddPart(forms.ModelForm):
     class Meta:
-        model = Booking
-        fields = ['taking_place']
+        model = Instance
+        fields = ['weight', 'type']
         labels = {
-            'taking_place': "Орын сайлаңыз"
+            "weight": "Напишите вес в килограммах",
+            "type": "Выберите тип зерна",
         }
         widgets = {
-            "taking_place": Select(attrs={"class": "form-control"}),
+            "weight": NumberInput(attrs={"class": "form-control"}),
+            "type": Select(attrs={"class": "form-control"}),
         }
 
-    def __init__(self, *args, **kwargs):
-        super(BookingForm, self).__init__(*args, *kwargs)
-        self.fields['taking_place'].queryset = Place.objects.filter(is_engaged=False)
+
+class AddTypeCorn(forms.ModelForm):
+    class Meta:
+        model = CornType
+        fields = ['type', 'grade']
+        labels = {
+            "type": "Напишите название типа",
+            "grade": "Напишите сорт зерна в цифрах от 1 до 3",
+        }
+        widgets = {
+            "type": TextInput(attrs={"class": "form-control"}),
+            "grade": NumberInput(attrs={"class": "form-control"}),
+        }
+
+
+class AddEquipment(forms.ModelForm):
+    class Meta:
+        model = Equipment
+        fields = ['name', 'serial_key']
+        labels = {
+            "name": "Напишите название аппарата",
+            "serial_key": "Напишите серийный номер аппарата",
+        }
+        widgets = {
+            "name": TextInput(attrs={"class": "form-control"}),
+            "serial_key": TextInput(attrs={"class": "form-control"}),
+        }

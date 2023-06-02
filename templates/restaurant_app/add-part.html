@@ -1,10 +1,7 @@
 {% extends 'restaurant_app/forms.html' %}
-{% block title %}
-    {{ title }}
-{% endblock %}
 {% block form %}
     {% load static %}
-    <h3>Добавить процесс</h3>
+    <h3>Добавить партию зерна</h3>
     <form method="post">
         {% csrf_token %}
         {{ form }}

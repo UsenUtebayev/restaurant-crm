@@ -1,14 +1,12 @@
 from django.contrib import admin
 
-from restaurant_app.models import Food, Drink, Order, Client, Role, Booking, Place
+from restaurant_app.models import Temperature, Humidity, Order, Instance, CornType
 
 
-@admin.register(Food)
-@admin.register(Drink)
+@admin.register(Temperature)
+@admin.register(Humidity)
 @admin.register(Order)
-@admin.register(Client)
-@admin.register(Role)
-@admin.register(Booking)
-@admin.register(Place)
+@admin.register(CornType)
+@admin.register(Instance)
 class AuthorAdmin(admin.ModelAdmin):
     pass

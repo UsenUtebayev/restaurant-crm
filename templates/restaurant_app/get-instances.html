@@ -1,0 +1,70 @@
+{% extends 'restaurant_app/base.html' %}
+
+{% load static %}
+
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
+    <div class="container m-5 p-5">
+        <div class="container my-4">
+            <h5>Список типов зерна:</h5>
+            {% if corn_types %}
+                <ul class="list-group">
+                    {% for corn_type in corn_types %}
+                        <li class="list-group-item text-dark">
+                            Название зерна:{{ corn_type.type }}, сорт зерна:{{ corn_type.grade }}
+                            <form action="{% url 'delete-corn-type' corn_type.pk %} ">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger btn-sm my-2" type="submit">
+                                    Удалить
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h6 class="text-danger">Список пуст!</h6>
+            {% endif %}
+        </div>
+        <div class="container my-4">
+            <h5>Список партий:</h5>
+            {% if instances %}
+                <ul class="list-group">
+                    {% for instance in instances %}
+                        <li class="list-group-item">
+                            {{ instance.type }}, вес партий:{{ instance.weight }}
+                            <form action="{% url 'delete-instance' instance.pk %} ">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger btn-sm my-2" type="submit">
+                                    Удалить
+                                </button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h6 class="text-danger">Список пуст!</h6>
+            {% endif %}
+        </div>
+        <div class="container my-4">
+            <h5>Список аппаратов:</h5>
+            {% if equipments %}
+                <ul class="list-group">
+                    {% for equipment in equipments %}
+                        <li class="list-group-item">
+                            Название аппарата:{{ equipment.name }}, серийный номер:{{ equipment.serial_key }}
+                            <form action="{% url 'delete-equip' equipment.pk %} ">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-danger btn-sm my-2" type="submit">
+                                    Удалить
+                                </button>
+                            </form>
+                        </li>
+
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h6 class="text-danger"> Список пуст! </h6>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

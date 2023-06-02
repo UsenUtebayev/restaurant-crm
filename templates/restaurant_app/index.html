@@ -8,58 +8,50 @@
 {% block content %}
     {% if user.is_authenticated %}
         <div class="container d-flex flex-wrap m-auto justify-content-center">
-            {% if orders %}
-                {% for order in orders %}
+            {% if procceses %}
+                {% for procces in procceses %}
                     <div class="card border-primary m-3" style="max-width: 18rem;">
                         <div class="card-header bg-dark border-primary d-flex justify-content-between">
                         <span class="text-light">
-                            {{ order.order_time | time }} - {% widthratio order.food.cook_time 60 1 %} мин
+                            {{ procces.order_time}}
                         </span>
-                            <span class="text-info"><strong>{{ order.food.price | add:order.drink.price }}</strong> тг</span>
                         </div>
                         <div class="card-body" style="background-color: #f5f5f5">
-                            <h4 class="card-title text-info">{{ order.description }}</h4>
-                            <p>
-                                <span class="text-dark">Тағам: {{ order.food }}</span>
-                                <br>
-                                <span class="text-dark">Cусын: {{ order.drink }}</span>
-                                <br>
-                                {% if role.pk == 1 %}
-                                    <span class="text-info">Сіздің клиент: {{ order.client }}</span>
-                                {% else %}
-                                    <span class="text-info">Қызметтегі даяшы: {{ order.waiter }}</span>
-                                {% endif %}
-                            </p>
-                            <form action="{% url 'delete-order' order.id %} ">
+                            <h4 class="card-title text-danger">{{ procces.temperature }}</h4>
+                            <h5 class="card-title text-dark">Влажность:{{procces.humidity }}</h5>
+                            <h5 class="card-title text-success">{{ procces.instance }}</h5>
+                            <h5 class="card-title text-info">{{ procces.equipment }}</h5>
+                            <p class="card-title ">{{ procces.description }}</p>
+                            <form action="{% url 'delete-order' procces.id %} ">
                                 {% csrf_token %}
                                 <button class="btn btn-outline-success btn-sm container-fluid" type="submit">
-                                    Тапсырысты жабу
+                                    Отметить завершенным
                                 </button>
                             </form>
                         </div>
                     </div>
                 {% endfor %}
+
             {% else %}
                 <div class="container m-5 d-flex align-items-center flex-column">
-                    <h3>Тапсырыс беру сервисіне қош келдіңіз!</h3>
-                    <p>Сіздін тапсырыстырыңық әлі жоқ!</p>
+                    <h3>Добро пожаловать в сервис управления временем зерносушилки!</h3>
+                    <p>Очередь пуст!</p>
 
-                    <a class="mt-2" href="{% url 'make-order' %}"><Бірінші></Бірінші> тапсырысты жасау?</a>
+                    <a class="mt-2" href="{% url 'make-order' %}">Добавить в очередь процесс?</a>
                 </div>
             {% endif %}
         </div>
     {% else %}
-        <div class="container m-5 d-flex align-items-center flex-column">
-            <h3>Тапсырыс беру сервисіне қош келдіңіз!</h3>
-            <p>Қолдану үшің жуйеге кіріңіз немесе тіркеліңіз</p>
-            <form method="post">
+        <div class="container m-5 py-5 d-flex align-items-center flex-column">
+            <h3>Добро пожаловать в систему!</h3>
+            <p>Для использвания сервиса пожалуйста войдите в систему!</p>
+            <form method="post" class="d-flex justify-content-center flex-column">
                 {% csrf_token %}
                 {{ form }}
-                <button class="btn btn-outline-success mt-2" type="submit">Қабылдау</button>
+                <button class="btn btn-outline-success mt-2" type="submit">Отправить</button>
             </form>
-            <a class="mt-2" href="{% url 'registration' %}">Тіркелгіңіз келеді ме?</a>
+            <a class="mt-2" href="{% url 'registration' %}">Хотите зарегистрироваться?</a>
         </div>
 
     {% endif %}
-
 {% endblock %}

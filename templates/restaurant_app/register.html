@@ -1,11 +1,11 @@
 {% extends 'restaurant_app/forms.html' %}
 {% block form %}
-    <h1>Тіркелу</h1>
+    <h1>Регистрация</h1>
     <form method="post">
         {% csrf_token %}
         {{ form }}
-        <button class="btn btn-outline-success mt-2" type="submit">Қабылдау</button>
+        <button class="btn btn-outline-success mt-2" type="submit">Отправить</button>
     </form>
-    <a class="mt-2" href="{% url 'login' %}">Кіру қажетті ма?</a>
+    <a class="mt-2" href="{% url 'login' %}">Войти?</a>
 
 {% endblock %}

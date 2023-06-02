@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect, get_object_or_404
 
-from restaurant_app.forms import UserRegistrationForm, UserLoginForm, ChangePasswordForm, MakeOrder, BookingForm
-from restaurant_app.models import Order, Client, Place, Booking, Food, Drink
+from restaurant_app.forms import UserRegistrationForm, UserLoginForm, ChangePasswordForm, MakeOrder, AddPart, \
+    AddTypeCorn, AddEquipment
+from restaurant_app.models import Order, Equipment, CornType, Instance
 
 
 def index(request):
@@ -17,26 +17,10 @@ def index(request):
             return redirect('index')
         else:
             form = UserLoginForm
-        return render(request, 'restaurant_app/index.html', {'form': form, "title": "Қош келдіңіз!"})
-    try:
-        role = Client.objects.get(pk=request.user.pk).role
-    except Client.DoesNotExist:
-        role = None
-
-    if role is None:
-        orders = Order.objects.all()
-        context = {"title": "Сіздің тапсырмаларыңыз", "orders": orders, "role": role, }
-        return render(request, 'restaurant_app/index.html', context=context)
-
-    if request.user.is_authenticated:
-        if role.pk == 3:
-            orders = Order.objects.filter(client=request.user.pk)
-        elif role.pk == 2:
-            orders = Order.objects.filter(cook=request.user.pk)
-        else:
-            orders = Order.objects.filter(waiter=request.user.pk)
-        context = {"title": "Сіздің тапсырмаларыңыз", "orders": orders}
-        return render(request, 'restaurant_app/index.html', context=context)
+        return render(request, 'restaurant_app/index.html', {'form': form, "title": "Добро пожаловать!"})
+    else:
+        procceses = Order.objects.filter(client_id=request.user)
+        return render(request, 'restaurant_app/index.html', {"title": "Добро пожаловать!", "procceses": procceses})
 
 
 def register(request):
@@ -54,7 +38,7 @@ def register(request):
                 messages.error(request, 'Ошибка регистраций')
         else:
             form = UserRegistrationForm()
-        return render(request, 'restaurant_app/register.html', {"form": form, "title": "Тіркелу"})
+        return render(request, 'restaurant_app/register.html', {"form": form, "title": "Регистрация"})
 
 
 def login_user(request):
@@ -65,7 +49,7 @@ def login_user(request):
         return redirect('index')
     else:
         form = UserLoginForm
-    return render(request, 'restaurant_app/login.html', {'form': form, "title": "Кіру!"})
+    return render(request, 'restaurant_app/login.html', {'form': form, "title": "Вход!"})
 
 
 def logout_user(request):
@@ -80,7 +64,7 @@ def change_password(request):
         form.save()
         return redirect('logout')
 
-    return render(request, 'restaurant_app/change-password.html', context={"form": form, "title": "Құпия сөз өзгерту"})
+    return render(request, 'restaurant_app/change-password.html', context={"form": form, "title": "Смена пароля"})
 
 
 @login_required()
@@ -92,7 +76,7 @@ def add_order(request):
             form.instance.client_id = request.user.pk
             form.save()
             return redirect('index')
-    return render(request, 'restaurant_app/add-order.html', context={"form": form})
+    return render(request, 'restaurant_app/add-order.html', context={"form": form, 'title': 'Добавить процесс'})
 
 
 def delete_order(request, pk):
@@ -101,37 +85,64 @@ def delete_order(request, pk):
     return redirect('index')
 
 
-def add_booking(request):
-    form = BookingForm()
+def add_part(request):
+    form = AddPart()
     if request.method == 'POST':
-        form = BookingForm(request.POST)
+        form = AddPart(request.POST)
         if form.is_valid():
-            place = Place.objects.get(pk=form.instance.taking_place.pk)
-            place.is_engaged = True
-            place.save(update_fields=['is_engaged'])
-            form.instance.client_id = request.user.pk
             form.save()
             return redirect('index')
-    return render(request, 'restaurant_app/add-booking.html', context={"form": form})
+    return render(request, 'restaurant_app/add-part.html', context={"form": form})
 
 
-def get_bookings(request):
-    bookings = None
-    try:
-        role = Client.objects.get(pk=request.user.pk).role
-    except Client.DoesNotExist:
-        role = None
-
-    if role.pk == 1:
-        bookings = Booking.objects.all()
-        return render(request, 'restaurant_app/booking-list.html', context={"bookings": bookings})
-    else:
-        bookings = Booking.objects.filter(client=request.user.pk)
-        return render(request, 'restaurant_app/booking-list.html', context={"bookings": bookings})
+def add_corn_type(request):
+    form = AddTypeCorn()
+    if request.method == 'POST':
+        form = AddTypeCorn(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    return render(request, 'restaurant_app/add-corn-type.html', context={"form": form})
 
 
-def get_menu(request):
-    foods = Food.objects.all()
-    drinks = Drink.objects.all()
-    context = {'foods': foods, 'drinks': drinks}
-    return render(request, 'restaurant_app/get-menu.html', context=context)
+def add_equip(request):
+    form = AddEquipment()
+    if request.method == 'POST':
+        form = AddEquipment(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+    return render(request, 'restaurant_app/add-equip.html', context={"form": form})
+
+
+def get_instances(request):
+    corn_types = CornType.objects.all()
+    equipments = Equipment.objects.all()
+    instances = Instance.objects.all()
+    return render(request, 'restaurant_app/get-instances.html', context={'instances': instances,
+                                                                         "equipments": equipments,
+                                                                         "corn_types": corn_types,
+                                                                         'title': 'Список объектов'
+                                                                         })
+
+
+def delete_corn_type(request, pk):
+    instance = get_object_or_404(CornType, pk=pk)
+    instance.delete()
+    return redirect('get-instances')
+
+
+def delete_equip(request, pk):
+    instance = get_object_or_404(Equipment, pk=pk)
+    instance.delete()
+    return redirect('get-instances')
+
+
+def delete_instance(request, pk):
+    instance = get_object_or_404(Instance, pk=pk)
+    instance.delete()
+    return redirect('get-instances')
+
+
+def about(request):
+    return render(request, 'restaurant_app/info.html', {'title': 'О сервисе'})
