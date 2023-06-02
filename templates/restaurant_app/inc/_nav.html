@@ -10,12 +10,14 @@
             <li class="nav-item mx-1">
                 <a class="nav-link" href="{% url 'index' %}">Главное</a>
             </li>
-            <li class="nav-item mx-1">
-                <a class="nav-link" href="{% url 'make-order' %}">Добавить процесс</a>
-            </li>
-            <li class="nav-item mx-1">
-                <a class="nav-link" href="{% url 'get-instances' %}">Посмотреть список объектов</a>
-            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item mx-1">
+                    <a class="nav-link" href="{% url 'make-order' %}">Добавить процесс</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a class="nav-link" href="{% url 'get-instances' %}">Посмотреть список объектов</a>
+                </li>
+            {% endif %}
             <li class="nav-item mx-1">
                 <a class="nav-link" href="{% url 'info' %}">О сервисе</a>
             </li>
